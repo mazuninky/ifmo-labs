@@ -1,0 +1,11 @@
+{
+    "utterance_id": "id",
+    "utterance_type": "type",
+    "ontology_label": "device",
+    "text" : "когда я приду, сделай чай",
+    "stats-indices": [{
+        "Condition": [0, 1, 2],
+        "Command": [3],
+        "Object" : [4]
+    }]
+}

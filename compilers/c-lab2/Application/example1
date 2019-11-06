@@ -1,0 +1,7 @@
+Var
+    keka, lol
+Begin
+    keka := 5
+    IF (keka = 5) lol:=3 ELSE lol:=lol>>3
+End
+.

@@ -1,0 +1,13 @@
+syntax = "proto3";
+
+message Experiments {
+    repeated Experiment experiment = 1;
+}
+
+message Experiment {
+    int32 n = 1;
+    int32 m = 2;
+    int64 time = 3;
+    int32 method = 4;
+    int32 mark = 5;
+}

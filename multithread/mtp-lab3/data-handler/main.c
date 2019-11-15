@@ -7,25 +7,30 @@
 #include <fcntl.h>
 #include "struct.h"
 #include "algorithm.h"
+#include "output.h"
 #include <stddef.h>
 #include <stdlib.h>
 #include <pthread.h>
 
-
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wmissing-noreturn"
-
 queue_t write_queue;
 
 void *writer_func(void *param) {
     int fd = (int) param;
 
     while (true) {
-        void *message = queue_fist(write_queue);
+        OutputMessage *message = queue_fist(write_queue);
         while (message != NULL) {
-            write(fd, message, strlen((char *) message));
+            char *string = to_string(message);
+            free(message->Data);
+            free(message);
+            write(fd, string, strlen(string));
+            free(string);
+
             message = queue_fist(write_queue);
         }
+        sleep(1);
     }
 }
 
@@ -34,9 +39,9 @@ void *execute_thread(void *param) {
     void *result = NULL;
     if (message->Type == FIBONACCI) {
         int n = ((int *) message->Data)[0];
-        char *buf = malloc(sizeof(char) * 100);
-        sprintf(buf, "%ld\n", fibonacci(n));
-        result = buf;
+        long *data = malloc(sizeof(long));
+        *data = fibonacci(n);
+        result = create_message(FIBONACCI, data);
     }
 
     return result;
@@ -48,13 +53,14 @@ void *reader_func(void *param) {
         TMessage *message = readMessage(fd);
         while (message != NULL) {
             if (message->Type == STOP) {
+                queue_add(write_queue, create_message(STOP, NULL));
                 pthread_exit(0);
             } else {
                 pthread_t executor;
                 pthread_create(&executor, NULL, execute_thread, message);
-                char *result = NULL;
-                pthread_join(executor, &result);
-                queue_add(write_queue, result);
+                OutputMessage *output = NULL;
+                pthread_join(executor, &output);
+                queue_add(write_queue, output);
             }
 
             free(message->Data);
@@ -62,11 +68,9 @@ void *reader_func(void *param) {
             message = readMessage(fd);
         }
 
-        sleep(100);
+        //sleep(100);
     }
 }
-
-#pragma clang diagnostic pop
 
 int main() {
     if (queue_init(&write_queue) != 0) {
@@ -87,10 +91,14 @@ int main() {
     }
 
     pthread_join(reader, NULL);
-    pthread_join(writer, NULL);
+
+    while (!is_empty(write_queue));
+    pthread_cancel(writer);
 
     close(fd_writer);
     close(fd_example);
 
     return 0;
 }
+
+#pragma clang diagnostic pop

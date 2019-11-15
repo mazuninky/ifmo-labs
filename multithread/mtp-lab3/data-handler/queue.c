@@ -64,3 +64,10 @@ void *queue_fist(queue_t queue) {
     pthread_mutex_unlock(&queue->lock);
     return value;
 }
+
+bool is_empty(queue_t queue) {
+    pthread_mutex_lock(&queue->lock);
+    bool empty = queue->root == NULL;
+    pthread_mutex_unlock(&queue->lock);
+    return empty;
+}

@@ -5,6 +5,6 @@ set(CMAKE_C_STANDARD 99)
 
 find_library(PTHREAD_LIBRARY pthread)
 
-add_executable(lab3 main.c struct.h struct.c queue.h queue.c algorithm.h algorithm.c)
+add_executable(lab3 main.c struct.h struct.c queue.h queue.c algorithm.h algorithm.c output.h output.c)
 
 target_link_libraries(lab3 ${PTHREAD_LIBRARY})

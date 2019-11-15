@@ -15,7 +15,7 @@ TMessage *readMessage(int fd) {
     }
 
     uint8_t *data = NULL;
-    if (type == 0) {
+    if (type != STOP) {
         data = malloc(sizeof(uint8_t) * size);
         if (read(fd, data, size * sizeof(uint8_t)) != size * sizeof(uint8_t)) {
             return NULL;

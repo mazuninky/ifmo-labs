@@ -2,6 +2,7 @@
 #define LAB3_STRUCT_H
 
 #include <stdint.h>
+#include <stdio.h>
 
 typedef enum {
     FIBONACCI,
@@ -15,5 +16,9 @@ typedef struct {
     uint64_t Size;
     uint8_t *Data;
 } TMessage;
+
+void printMessage(TMessage *message);
+
+TMessage *readMessage(int fd);
 
 #endif //LAB3_STRUCT_H

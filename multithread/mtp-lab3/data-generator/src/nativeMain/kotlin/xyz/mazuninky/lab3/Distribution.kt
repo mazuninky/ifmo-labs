@@ -1,6 +1,5 @@
-package xyz.mazuninky
+package xyz.mazuninky.lab3
 
-import platform.posix.rand
 import kotlin.random.Random
 
 typealias DistributionGenerator = () -> Float

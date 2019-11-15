@@ -6,21 +6,26 @@
 #define LAB3_QUEUE_H
 
 #include <stdint.h>
+#include <ntsid.h>
 
 typedef struct Node {
     struct Node *next;
 
-    uint64_t Size;
-    uint8_t *Data;
+    void *value;
 } queue_node;
 
-
 typedef struct {
-    queue_node *next;
+    queue_node *root;
+    queue_node *last;
+    pthread_mutex_t lock;
 } queue_descriptor;
 
 typedef queue_descriptor *queue_t;
 
-int queue_init(queue_t *queue);
+int queue_init(queue_t *queue_desc);
+
+void queue_add(queue_t queue, void *value);
+
+void *queue_fist(queue_t queue);
 
 #endif //LAB3_QUEUE_H

@@ -10,7 +10,7 @@ kotlin {
     macosX64("native") {
         binaries {
             executable {
-                entryPoint = "xyz.mazuninky.main"
+                entryPoint = "xyz.mazuninky.lab3.main"
             }
         }
     }

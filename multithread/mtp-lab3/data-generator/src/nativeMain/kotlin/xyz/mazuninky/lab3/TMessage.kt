@@ -8,9 +8,9 @@ import platform.posix.stdout
 
 sealed class TMessage
 
-data class Fibonacci(val n: Int) : TMessage()
-data class Pow(val base: Float, val n: Int) : TMessage()
-data class BubbleSort(val numbers: List<Float>) : TMessage()
+data class Fibonacci(val n: UInt) : TMessage()
+data class Pow(val base: Int, val n: UInt) : TMessage()
+data class BubbleSort(val numbers: List<ULong>) : TMessage()
 object Stop : TMessage()
 
 //data class TMessageBytes(val type: Byte, val size: Long,
@@ -22,25 +22,36 @@ object Stop : TMessage()
 //    }
 //}
 
+@UseExperimental(ExperimentalUnsignedTypes::class)
 fun write(message: TMessage) {
     val byteArray: ByteArray
     when (message) {
         is Fibonacci -> {
-            byteArray = ByteArray(UByte.SIZE_BYTES
-                    + ULong.SIZE_BYTES + Int.SIZE_BYTES)
+            byteArray = ByteArray(UByte.SIZE_BYTES + ULong.SIZE_BYTES + Int.SIZE_BYTES)
             byteArray.setUByteAt(0, 0.toUByte())
             byteArray.setULongAt(UByte.SIZE_BYTES, Int.SIZE_BYTES.toULong())
-            byteArray.setIntAt(UByte.SIZE_BYTES + ULong.SIZE_BYTES, message.n)
+            byteArray.setUIntAt(UByte.SIZE_BYTES + ULong.SIZE_BYTES, message.n)
+        }
+        is Pow -> {
+            byteArray = ByteArray(UByte.SIZE_BYTES + ULong.SIZE_BYTES + Int.SIZE_BYTES + UInt.SIZE_BYTES)
+            byteArray.setUByteAt(1, 0.toUByte())
+            byteArray.setULongAt(UByte.SIZE_BYTES, (Int.SIZE_BYTES + UInt.SIZE_BYTES).toULong())
+            byteArray.setIntAt(UByte.SIZE_BYTES + ULong.SIZE_BYTES, message.base)
+            byteArray.setUIntAt(UByte.SIZE_BYTES + ULong.SIZE_BYTES, message.n)
+        }
+        is BubbleSort -> {
+            byteArray = ByteArray(UByte.SIZE_BYTES + ULong.SIZE_BYTES + ULong.SIZE_BYTES * message.numbers.size)
+            byteArray.setUByteAt(2, 0.toUByte())
+            byteArray.setULongAt(UByte.SIZE_BYTES, (ULong.SIZE_BYTES * message.numbers.size).toULong())
+            message.numbers.forEachIndexed { index, uLong ->
+                byteArray.setULongAt(UByte.SIZE_BYTES + ULong.SIZE_BYTES + index * ULong.SIZE_BYTES, uLong)
+            }
         }
         is Stop -> {
             byteArray = ByteArray(UByte.SIZE_BYTES + ULong.SIZE_BYTES)
             byteArray.setUByteAt(0, 3.toUByte())
             byteArray.setULongAt(UByte.SIZE_BYTES, 0.toULong())
         }
-//        is Pow -> {
-//
-//        }
-        else -> TODO()
     }
 
     byteArray.usePinned {

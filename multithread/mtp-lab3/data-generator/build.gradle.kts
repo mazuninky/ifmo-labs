@@ -10,6 +10,7 @@ kotlin {
     macosX64("native") {
         binaries {
             executable {
+//                compilerOpts = mutableListOf("-Xuse-experimental=kotlin.Experimental")
                 entryPoint = "xyz.mazuninky.lab3.main"
             }
         }
@@ -26,3 +27,8 @@ repositories {
     mavenCentral()
     jcenter()
 }
+
+//val compileKotlin: KotlinCompile by tasks
+//compileKotlin.kotlinOptions {
+//    freeCompilerArgs = listOf("-Xuse-experimental=kotlin.Experimental")
+//}

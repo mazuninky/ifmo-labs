@@ -1,5 +1,7 @@
 package xyz.mazuninky.lab3
 
+import kotlin.math.ln
+import kotlin.math.log
 import kotlin.random.Random
 
 typealias DistributionGenerator = () -> Float
@@ -28,5 +30,15 @@ fun сauchy(x0: Float, gamma: Float): Float {
 fun сauchyGenerator(x0: Float, gamma: Float): DistributionGenerator {
     return {
         сauchy(x0, gamma)
+    }
+}
+
+fun logistic(mu: Float, s: Float): Float {
+    return mu + s * ln(1f / uniform(0f, 1f) - 1f)
+}
+
+fun logisticGenerator(mu: Float, s: Float): DistributionGenerator {
+    return {
+        logistic(mu, s)
     }
 }

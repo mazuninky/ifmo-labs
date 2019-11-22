@@ -3,8 +3,8 @@
 
 long fibonacci(int n);
 
-void bubbleSort(uint64_t *array);
+void bubbleSort(uint64_t *array, long size);
 
-double powBase(double base, int step);
+long powBase(int base, uint32_t step);
 
 #endif //LAB3_ALGORITHM_H

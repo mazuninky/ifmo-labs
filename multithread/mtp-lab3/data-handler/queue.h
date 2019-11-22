@@ -6,8 +6,8 @@
 #define LAB3_QUEUE_H
 
 #include <stdint.h>
-#include <ntsid.h>
 #include <stdbool.h>
+#include <pthread.h>
 
 typedef struct Node {
     struct Node *next;

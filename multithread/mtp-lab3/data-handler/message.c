@@ -1,4 +1,5 @@
-#include "struct.h"
+#include "message.h"
+#include "algorithm.h"
 #include <stdio.h>
 #include <unistd.h>
 #include <stdlib.h>
@@ -39,4 +40,28 @@ void printMessage(TMessage *message) {
             printf("Data: %i\n", ((int *) message->Data)[0]);
             break;
     }
+}
+
+
+OutputMessage *interpret(TMessage *message) {
+    OutputMessage *result = NULL;
+    if (message->Type == FIBONACCI) {
+        int n = ((int *) message->Data)[0];
+        long *data = malloc(sizeof(long));
+        *data = fibonacci(n);
+        result = create_message(FIBONACCI, data);
+    } else if (message->Type == BUBBLE_SORT_UINT64) {
+        uint64_t *array = (uint64_t *) message->Data;
+        long size = message->Size / sizeof(uint64_t);
+        bubbleSort(array, size);
+        result = create_message(BUBBLE_SORT_UINT64, array);
+    } else if (message->Type == POW) {
+        int base = ((int *) message->Data)[0];
+        uint32_t n = ((uint32_t *) message->Data)[1];
+        long *data = malloc(sizeof(long));
+        *data = powBase(base, n);
+        result = create_message(POW, data);
+    }
+
+    return result;
 }

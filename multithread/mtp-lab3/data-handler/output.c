@@ -1,12 +1,10 @@
 #include <stdint.h>
 #include <stdio.h>
-#include <string.h>
-#include "struct.h"
+#include "message.h"
 #include "output.h"
-#include <unistd.h>
 #include <stdlib.h>
 
-OutputMessage *create_message(EType type, void *data) {
+OutputMessage *create_message(uint8_t type, void *data) {
     OutputMessage *message = malloc(sizeof(OutputMessage));
     message->Type = type;
     message->Data = data;
@@ -38,7 +36,7 @@ char *to_string(OutputMessage *message) {
     if (message->Type == FIBONACCI) {
         string += sprintf(string, " n: %ld", *((long *) message->Data));
     } else if (message->Type == POW) {
-
+        string += sprintf(string, " pow: %ld", *((long *) message->Data));
     }
 
     string += sprintf(string, "\n");

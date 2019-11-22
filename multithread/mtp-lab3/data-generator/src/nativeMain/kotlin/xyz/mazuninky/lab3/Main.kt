@@ -12,11 +12,13 @@ const val UNIFORM_B_PARAM = "b"
 fun main(args: Array<String>) {
     val parsed = parse(args)
     val mode = checkNotNull(parsed.getArg(MODE_OPTION))
-
+//    val mode = MODE_UNIFORM
     val generator = when (mode) {
         MODE_UNIFORM -> {
             val a = checkNotNull(parsed.getFloatParam(UNIFORM_A_PARAM))
             val b = checkNotNull(parsed.getFloatParam(UNIFORM_B_PARAM))
+//            val a = 5f
+//            val b = 15f
             uniform(a, b)
         }
         else -> throw IllegalArgumentException()

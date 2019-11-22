@@ -15,7 +15,7 @@ fun DistributionGenerator.nextULong(): ULong {
 
 
 fun generate(distrFunc: DistributionGenerator): TMessage {
-    val type = Random.nextInt(0, 2)
+    val type = Random.nextInt(0, 3)
 
     return when (type) {
         0 -> Fibonacci(distrFunc.nextUInt())

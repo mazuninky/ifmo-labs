@@ -34,14 +34,14 @@ fun write(message: TMessage) {
         }
         is Pow -> {
             byteArray = ByteArray(UByte.SIZE_BYTES + ULong.SIZE_BYTES + Int.SIZE_BYTES + UInt.SIZE_BYTES)
-            byteArray.setUByteAt(1, 0.toUByte())
+            byteArray.setUByteAt(0, 1.toUByte())
             byteArray.setULongAt(UByte.SIZE_BYTES, (Int.SIZE_BYTES + UInt.SIZE_BYTES).toULong())
             byteArray.setIntAt(UByte.SIZE_BYTES + ULong.SIZE_BYTES, message.base)
-            byteArray.setUIntAt(UByte.SIZE_BYTES + ULong.SIZE_BYTES, message.n)
+            byteArray.setUIntAt(UByte.SIZE_BYTES + ULong.SIZE_BYTES + Int.SIZE_BYTES, message.n)
         }
         is BubbleSort -> {
             byteArray = ByteArray(UByte.SIZE_BYTES + ULong.SIZE_BYTES + ULong.SIZE_BYTES * message.numbers.size)
-            byteArray.setUByteAt(2, 0.toUByte())
+            byteArray.setUByteAt(0, 2.toUByte())
             byteArray.setULongAt(UByte.SIZE_BYTES, (ULong.SIZE_BYTES * message.numbers.size).toULong())
             message.numbers.forEachIndexed { index, uLong ->
                 byteArray.setULongAt(UByte.SIZE_BYTES + ULong.SIZE_BYTES + index * ULong.SIZE_BYTES, uLong)

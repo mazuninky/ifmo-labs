@@ -1,5 +1,5 @@
 #include <stddef.h>
-#include "queue.h"
+#include "lab3/queue.h"
 #include <stdlib.h>
 #include <pthread.h>
 

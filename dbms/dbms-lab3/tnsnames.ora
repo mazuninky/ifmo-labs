@@ -1,0 +1,9 @@
+base=
+    (DESCRIPTION=
+        (ADDRESS_LIST=
+            (ADDRESS=(PROTOCOL=tcp)(HOST=db128)(PORT=1521))
+        )
+        (CONNECT_DATA=
+            (sid=s223412)
+        )
+    )

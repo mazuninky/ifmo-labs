@@ -1,5 +1,5 @@
-#include "message.h"
-#include "algorithm.h"
+#include "lab3/message.h"
+#include "lab3/algorithm.h"
 #include <stdio.h>
 #include <unistd.h>
 #include <stdlib.h>

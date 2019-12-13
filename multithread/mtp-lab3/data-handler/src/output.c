@@ -1,7 +1,7 @@
 #include <stdint.h>
 #include <stdio.h>
-#include "message.h"
-#include "output.h"
+#include "lab3/message.h"
+#include "lab3/output.h"
 #include <stdlib.h>
 
 OutputMessage *create_message(uint8_t type, void *data) {

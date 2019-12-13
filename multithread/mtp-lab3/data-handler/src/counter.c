@@ -1,4 +1,4 @@
-#include "counter.h"
+#include "lab3/counter.h"
 #include <stdlib.h>
 
 int counter_init(counter_t *counter) {

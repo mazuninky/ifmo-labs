@@ -1,0 +1,2 @@
+0 * * * * /u01/replication.sh
+0 * * * * /u01/expReplication.sh

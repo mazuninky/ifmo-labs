@@ -1,4 +1,5 @@
 #include <stdint.h>
+#include <lab3/algorithm.h>
 
 long fibonacci(int n) {
     long first = 0, second = 1, next;

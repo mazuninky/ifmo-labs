@@ -26,7 +26,6 @@
 queue_t write_queue;
 
 _Atomic int execute_thread_count;
-//counter_t execute_thread_count;
 
 void *writer_func(void *param);
 

@@ -8,12 +8,13 @@
 #include "lab3/message.h"
 #include "lab3/algorithm.h"
 #include "lab3/output.h"
-#include "lab3/counter.h"
 #include <stddef.h>
 #include <stdlib.h>
 #include <pthread.h>
 #include <errno.h>
 #include <getopt.h>
+
+//#define DEBUG
 
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wmissing-noreturn"
@@ -24,7 +25,8 @@
 
 queue_t write_queue;
 
-counter_t execute_thread_count;
+_Atomic int execute_thread_count;
+//counter_t execute_thread_count;
 
 void *writer_func(void *param);
 
@@ -59,7 +61,8 @@ void *execute_thread(void *param) {
     if (result != NULL)
         queue_add(write_queue, result);
 
-    decrementAndGet(execute_thread_count);
+    execute_thread_count--;
+//    decrementAndGet(execute_thread_count);
 }
 
 /*
@@ -98,7 +101,8 @@ void *reader_func(void *param) {
             } else {
                 pthread_t executor;
                 if (pthread_create(&executor, NULL, execute_thread, message) == 0) {
-                    incrementAndGet(execute_thread_count);
+                    execute_thread_count++;
+//                    incrementAndGet(execute_thread_count);
                 }
             }
             message = readMessage(fd);
@@ -139,11 +143,7 @@ int main(int argc, char *argv[]) {
         return EXIT_FAILURE;
     }
 
-    if (counter_init(&execute_thread_count) != 0) {
-        return EXIT_FAILURE;
-    }
-
-    int fd_writer = open(writerFilePath, O_WRONLY | O_CREAT);
+    int fd_writer = open(writerFilePath, O_WRONLY | O_CREAT, 0777);
     if (fd_writer == -1) {
         return EBADF;
     }
@@ -153,18 +153,29 @@ int main(int argc, char *argv[]) {
         return EAGAIN;
     }
 
+    int fd_reader = STDIN_FILENO;
+
+#ifdef DEBUG
+    fd_reader = open("data_input.bin", O_RDONLY);
+#endif
+
     pthread_t reader;
-    if (pthread_create(&reader, NULL, reader_func, STDIN_FILENO) != 0) {
+    if (pthread_create(&reader, NULL, reader_func, fd_reader) != 0) {
         return EAGAIN;
     }
 
     pthread_join(reader, NULL);
 
+    int not_empty = 0;
     while (!is_empty(write_queue));
-    while (get(execute_thread_count) != 0);
+    while (execute_thread_count != 0);
     pthread_cancel(writer);
 
     close(fd_writer);
+
+#ifdef DEBUG
+    close(fd_reader);
+#endif
 
     return EXIT_SUCCESS;
 }

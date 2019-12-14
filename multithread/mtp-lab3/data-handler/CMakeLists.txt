@@ -28,14 +28,3 @@ add_executable(lab3 ${sources})
 set(THREADS_PREFER_PTHREAD_FLAG ON)
 find_package(Threads REQUIRED)
 target_link_libraries(lab3 Threads::Threads)
-
-#add_subdirectory(src)
-#
-#enable_testing()
-##add_subdirectory(test)
-#
-#add_executable(lab3 test/test_framework.c)
-#add_test(FirstTest test/test_framework.c)
-
-#run:
-#	data-generator.kexe -mode uniform -param a=5 -param b=10 | lab3

@@ -1,0 +1,15 @@
+Pow pow: 390625
+Pow pow: 60466176
+Fibonacci n: 8
+Sort
+Pow pow: 59049
+Sort
+Sort
+Fibonacci n: 21
+Pow pow: 40353607
+Fibonacci n: 21
+Sort
+Pow pow: 32768
+Fibonacci n: 8
+Pow pow: 10077696
+Sort

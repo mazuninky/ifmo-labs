@@ -2,19 +2,38 @@
 #include <lab3/algorithm.h>
 
 long fibonacci(int n) {
-    long first = 0, second = 1, next;
+    if(n < 0)
+        return -1;
 
-    for (int c = 0; c < n; c++) {
-        if (c <= 1)
-            next = c;
-        else {
-            next = first + second;
-            first = second;
-            second = next;
-        }
+    int a = 0, b = 1, c, i;
+    if (n == 0)
+        return a;
+    for (i = 2; i <= n; i++) {
+        c = a + b;
+        a = b;
+        b = c;
     }
 
-    return next;
+    return b;
+//    if(n == 0)
+//        return 0;
+//
+//    if(n == 1)
+//        return 1;
+//
+//    long first = 0, second = 1, next;
+//
+//    for (int c = 0; c < n; c++) {
+//        if (c <= 1)
+//            next = c;
+//        else {
+//            next = first + second;
+//            first = second;
+//            second = next;
+//        }
+//    }
+
+//    return next;
 }
 
 void swap(uint64_t *A, uint64_t *B) {

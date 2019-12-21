@@ -1,4 +1,4 @@
-package xyz.mazuninky.lab6.ui.gallery
+package xyz.mazuninky.lab6.ui.trends
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -33,7 +33,7 @@ class ImageRecyclerAdapter(
     override fun getItemCount(): Int = images.size
 
     override fun onBindViewHolder(holder: ImageRecyclerHolder, position: Int) {
-        holder.loadImage(images[position].url)
+        holder.loadImage(images[position].img)
     }
 
     fun setImages(images: List<Video>) {

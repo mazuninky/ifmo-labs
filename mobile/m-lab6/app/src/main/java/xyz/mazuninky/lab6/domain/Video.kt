@@ -1,3 +1,3 @@
-package xyz.mazuninky.lab5.ui.gallery
+package xyz.mazuninky.lab6.domain
 
-data class Image(val url: String)
+data class Video(val id: String, val img: String)

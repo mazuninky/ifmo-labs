@@ -52,7 +52,7 @@ double count_write_load() {
 }
 
 char *dump_metrics() {
-    char *buffer = malloc(sizeof(char) * 100);
+    char *buffer = malloc(sizeof(char) * 250);
     sprintf(buffer, "%f,%f,%f,%f,%f,%f,%f,%f\n", read_working, read_waiting,
             read_time, count_read_load(), write_working, write_waiting, write_time, count_write_load());
     return buffer;

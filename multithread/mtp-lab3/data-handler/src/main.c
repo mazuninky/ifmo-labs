@@ -24,6 +24,10 @@
  * Define section
  */
 
+queue_t task_fibonacci_queue;
+queue_t task_bubble_queue;
+queue_t task_pow_queue;
+
 queue_t write_queue;
 
 _Atomic int execute_thread_count;
@@ -68,12 +72,56 @@ void *stats_writer(void *param) {
 }
 
 /*
+ * Per task section
+ */
+
+TMessage *read_message_with_type(EType type) {
+    switch (type) {
+        case BUBBLE_SORT_UINT64:
+            return queue_fist(task_bubble_queue);
+        case POW:
+            return queue_fist(task_pow_queue);
+        case FIBONACCI:
+            return queue_fist(task_fibonacci_queue);
+    }
+
+    return NULL;
+}
+
+void *task_execute_thread(void *param) {
+    EType type = (EType) param;
+
+    clock_t timer = 0, waiting = 0;
+    while (true) {
+        timer = clock();
+        TMessage *message;
+        do {
+            waiting = clock();
+            message = read_message_with_type(type);
+            if (message != NULL) {
+                stats_report(Execution, Waiting, waiting - timer);
+            }
+        } while (message == NULL);
+
+        void *result = interpret(message);
+        stats_report(Execution, Working, clock() - waiting);
+
+        if (result != NULL)
+            queue_add(write_queue, result);
+    }
+}
+
+
+/*
  * Per thread section
  */
 
 void *execute_thread(void *param) {
     TMessage *message = param;
+
+    clock_t timer = clock();
     void *result = interpret(message);
+    stats_report(Execution, Working, clock() - timer);
 
 //    free(message->Data);
 //    free(message);
@@ -82,7 +130,6 @@ void *execute_thread(void *param) {
         queue_add(write_queue, result);
 
     execute_thread_count--;
-//    decrementAndGet(execute_thread_count);
 }
 
 /*
@@ -104,10 +151,12 @@ void *writer_func(void *param) {
         } while (message == NULL);
 
         char *string = to_string(message);
+
 //            free(message->Data);
 //            free(message);
         write(fd, string, strlen(string));
-//            free(string);
+        free(string);
+
         stats_report(Write, Working, clock() - waiting);
     }
 }
@@ -116,8 +165,18 @@ void *writer_func(void *param) {
  * Reader section
  */
 
+void launch_thread(TMessage *message) {
+    pthread_t executor;
+    if (pthread_create(&executor, NULL, execute_thread, message) == 0) {
+        execute_thread_count++;
+    }
+}
+
 void *reader_func(void *param) {
-    int fd = (int) param;
+    int *params = (int *) param;
+    int fd = params[0];
+    StrategyType type = params[1];
+
     clock_t timer = 0, waiting = 0;
     while (true) {
         timer = clock();
@@ -133,9 +192,20 @@ void *reader_func(void *param) {
         if (message->Type == STOP) {
             pthread_exit(0);
         } else {
-            pthread_t executor;
-            if (pthread_create(&executor, NULL, execute_thread, message) == 0) {
-                execute_thread_count++;
+            if (type == PER_THREAD) {
+                launch_thread(message);
+            } else {
+                switch (message->Type) {
+                    case POW:
+                        queue_add(task_pow_queue, message);
+                        break;
+                    case BUBBLE_SORT_UINT64:
+                        queue_add(task_bubble_queue, message);
+                        break;
+                    case FIBONACCI:
+                        queue_add(task_fibonacci_queue, message);
+                        break;
+                }
             }
         }
         stats_report(Read, Working, clock() - waiting);
@@ -156,7 +226,7 @@ int main(int argc, char *argv[]) {
     while (opt != -1) {
         switch (opt) {
             case 'n':
-
+                n = (int) strtol(argv[1] + sizeof(char), (char **) NULL, 10);
                 break;
             case 's':
                 if (strcmp(optarg, PER_THREAD_STRATEGY) == 0) {
@@ -206,16 +276,46 @@ int main(int argc, char *argv[]) {
     fd_reader = open("data_input.bin", O_RDONLY);
 #endif
 
+    pthread_t task_pow;
+    pthread_t task_sort;
+    pthread_t task_fibonacci;
+    if (strategy == PER_TASK) {
+        if (pthread_create(&task_fibonacci, NULL, task_execute_thread, FIBONACCI) != 0) {
+            return EAGAIN;
+        }
+        if (pthread_create(&task_pow, NULL, task_execute_thread, POW) != 0) {
+            return EAGAIN;
+        }
+        if (pthread_create(&task_sort, NULL, task_execute_thread, BUBBLE_SORT_UINT64) != 0) {
+            return EAGAIN;
+        }
+    }
+
+    int reader_params[] = {fd_reader, strategy};
     pthread_t reader;
-    if (pthread_create(&reader, NULL, reader_func, fd_reader) != 0) {
+    if (pthread_create(&reader, NULL, reader_func, reader_params) != 0) {
         return EAGAIN;
     }
 
     pthread_join(reader, NULL);
 
     while (!is_empty(write_queue));
-    while (execute_thread_count != 0);
+
+    if (strategy == PER_THREAD) {
+        while (execute_thread_count != 0);
+    }
+
+    if (strategy == PER_TASK) {
+        while (!is_empty(task_fibonacci_queue) && !is_empty(task_pow_queue) && !is_empty(task_bubble_queue));
+    }
+
     pthread_cancel(writer);
+
+    if (strategy == PER_TASK) {
+        pthread_cancel(task_fibonacci);
+        pthread_cancel(task_pow);
+        pthread_cancel(task_sort);
+    }
 
     pthread_cancel(stats);
 

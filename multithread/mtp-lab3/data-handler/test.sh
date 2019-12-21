@@ -1,2 +1,2 @@
 cd build
-cmake .. && cmake --build . && ctest
+cmake .. && cmake --build . && ctest --output-on-failure

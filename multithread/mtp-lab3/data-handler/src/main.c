@@ -8,6 +8,7 @@
 #include "lab3/message.h"
 #include "lab3/algorithm.h"
 #include "lab3/output.h"
+#include "lab3/stats.h"
 #include <stddef.h>
 #include <stdlib.h>
 #include <pthread.h>
@@ -47,6 +48,26 @@ typedef enum {
 static const char *writerFilePath = "output.txt";
 
 /*
+ * Stats section
+ */
+
+void *stats_writer(void *param) {
+    int *args = (int *) param;
+    double n = args[0] * 0.001;
+    int fd = args[1];
+
+    clock_t timer = clock();
+    while (true) {
+        if ((double) (timer - clock()) / CLOCKS_PER_SEC > n) {
+            char *metrics_string = dump_metrics();
+            write(fd, metrics_string, strlen(metrics_string));
+            free(metrics_string);
+            timer = clock();
+        }
+    }
+}
+
+/*
  * Per thread section
  */
 
@@ -70,19 +91,24 @@ void *execute_thread(void *param) {
 
 void *writer_func(void *param) {
     int fd = (int) param;
-
+    clock_t timer = 0, waiting = 0;
     while (true) {
-        OutputMessage *message = queue_fist(write_queue);
-        while (message != NULL) {
-            char *string = to_string(message);
+        timer = clock();
+        OutputMessage *message;
+        do {
+            waiting = clock();
+            message = queue_fist(write_queue);
+            if (message != NULL) {
+                stats_report(Write, Waiting, waiting - timer);
+            }
+        } while (message == NULL);
+
+        char *string = to_string(message);
 //            free(message->Data);
 //            free(message);
-            write(fd, string, strlen(string));
+        write(fd, string, strlen(string));
 //            free(string);
-
-            message = queue_fist(write_queue);
-        }
-        sleep(1);
+        stats_report(Write, Working, clock() - waiting);
     }
 }
 
@@ -92,22 +118,30 @@ void *writer_func(void *param) {
 
 void *reader_func(void *param) {
     int fd = (int) param;
+    clock_t timer = 0, waiting = 0;
     while (true) {
-        TMessage *message = readMessage(fd);
-        while (message != NULL) {
-            if (message->Type == STOP) {
-                pthread_exit(0);
-            } else {
-                pthread_t executor;
-                if (pthread_create(&executor, NULL, execute_thread, message) == 0) {
-                    execute_thread_count++;
-//                    incrementAndGet(execute_thread_count);
-                }
-            }
+        timer = clock();
+        TMessage *message;
+        do {
+            waiting = clock();
             message = readMessage(fd);
+            if (message != NULL) {
+                stats_report(Read, Waiting, waiting - timer);
+            }
+        } while (message == NULL);
+
+        if (message->Type == STOP) {
+            pthread_exit(0);
+        } else {
+            pthread_t executor;
+            if (pthread_create(&executor, NULL, execute_thread, message) == 0) {
+                execute_thread_count++;
+            }
         }
+        stats_report(Read, Working, clock() - waiting);
     }
 }
+
 
 /*
  * Main section
@@ -118,6 +152,7 @@ int main(int argc, char *argv[]) {
 
     int opt, index;
     opt = getopt_long(argc, argv, optString, long_options, &index);
+    int n = 1;
     while (opt != -1) {
         switch (opt) {
             case 'n':
@@ -136,6 +171,19 @@ int main(int argc, char *argv[]) {
         }
 
         opt = getopt_long(argc, argv, optString, long_options, &index);
+    }
+
+    int fd_stats = open("stats.txt", O_WRONLY | O_CREAT, 0777);
+    if (fd_stats == -1) {
+        return EBADF;
+    }
+
+    int stats_arg[] = {n, fd_stats};
+
+    stats_init();
+    pthread_t stats;
+    if (pthread_create(&stats, NULL, stats_writer, stats_arg) != 0) {
+        return EAGAIN;
     }
 
     if (queue_init(&write_queue) != 0) {
@@ -165,12 +213,14 @@ int main(int argc, char *argv[]) {
 
     pthread_join(reader, NULL);
 
-    int not_empty = 0;
     while (!is_empty(write_queue));
     while (execute_thread_count != 0);
     pthread_cancel(writer);
 
+    pthread_cancel(stats);
+
     close(fd_writer);
+    close(fd_stats);
 
 #ifdef DEBUG
     close(fd_reader);

@@ -178,3 +178,5 @@ CTestTestfile.cmake
 _deps
 build
 data_input.bin
+output.txt
+stats.txt

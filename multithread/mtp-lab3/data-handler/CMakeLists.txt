@@ -36,8 +36,8 @@ add_custom_command(TARGET gcov
 #        WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
 #        )
 
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fprofile-arcs -ftest-coverage")
-set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -fprofile-arcs -ftest-coverage")
+#set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fprofile-arcs -ftest-coverage")
+#set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -fprofile-arcs -ftest-coverage")
 
 ## Test
 configure_file(cmake/googletest-download.cmake
@@ -61,7 +61,7 @@ file(GLOB sources
         "${PROJECT_SOURCE_DIR}/include/lab3/*.h"
         "${PROJECT_SOURCE_DIR}/src/*.c")
 
-add_executable(lab3 ${sources})
+add_executable(lab3 ${sources} include/lab3/stats.h src/stats.c)
 
 set(THREADS_PREFER_PTHREAD_FLAG ON)
 find_package(Threads REQUIRED)

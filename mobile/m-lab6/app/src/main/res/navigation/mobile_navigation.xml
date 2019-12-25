@@ -7,37 +7,55 @@
 
     <fragment
         android:id="@+id/nav_home"
-        android:name="xyz.mazuninky.lab6.ui.home.HomeFragment"
-        android:label="@string/menu_home"
-        tools:layout="@layout/fragment_home" />
-
-    <fragment
-        android:id="@+id/nav_gallery"
         android:name="xyz.mazuninky.lab6.ui.trends.TrendsFragment"
+        android:label="@string/menu_home"
+        tools:layout="@layout/fragment_gallery">
+        <action
+            android:id="@+id/action_nav_home_to_nav_video"
+            app:destination="@id/nav_video"/>
+    </fragment>
+
+
+    <fragment
+        android:id="@+id/nav_video"
+        android:name="xyz.mazuninky.lab6.ui.video.VideoFragment"
         android:label="@string/menu_gallery"
-        tools:layout="@layout/fragment_gallery" />
+        tools:layout="@layout/fragment_video_player">
+
+        <argument
+            android:name="videoId"
+            app:argType="string" />
+
+    </fragment>
 
     <fragment
-        android:id="@+id/nav_slideshow"
-        android:name="xyz.mazuninky.lab6.ui.slideshow.SlideshowFragment"
-        android:label="@string/menu_slideshow"
-        tools:layout="@layout/fragment_slideshow" />
+        android:id="@+id/nav_jetpack"
+        android:name="xyz.mazuninky.lab6.ui.playlist.jetpack.JetpackFragment"
+        android:label="@string/menu_home"
+        tools:layout="@layout/fragment_playlist" >
+        <action
+            android:id="@+id/action_nav_jetpack_to_nav_video"
+            app:destination="@id/nav_video"/>
+    </fragment>
 
     <fragment
-        android:id="@+id/nav_tools"
-        android:name="xyz.mazuninky.lab6.ui.tools.ToolsFragment"
-        android:label="@string/menu_tools"
-        tools:layout="@layout/fragment_tools" />
+        android:id="@+id/nav_multiplatform"
+        android:name="xyz.mazuninky.lab6.ui.playlist.multiplatform.MultiplatformFragment"
+        android:label="@string/menu_home"
+        tools:layout="@layout/fragment_playlist" >
+        <action
+            android:id="@+id/action_nav_multiplatform_to_nav_video"
+            app:destination="@id/nav_video"/>
+    </fragment>
 
     <fragment
-        android:id="@+id/nav_share"
-        android:name="xyz.mazuninky.lab6.ui.share.ShareFragment"
-        android:label="@string/menu_share"
-        tools:layout="@layout/fragment_share" />
+        android:id="@+id/nav_studio"
+        android:name="xyz.mazuninky.lab6.ui.playlist.studio.StudioFragment"
+        android:label="@string/menu_home"
+        tools:layout="@layout/fragment_playlist" >
+        <action
+            android:id="@+id/action_nav_stuido_to_nav_video"
+            app:destination="@id/nav_video"/>
+    </fragment>
 
-    <fragment
-        android:id="@+id/nav_send"
-        android:name="xyz.mazuninky.lab6.ui.send.SendFragment"
-        android:label="@string/menu_send"
-        tools:layout="@layout/fragment_send" />
 </navigation>

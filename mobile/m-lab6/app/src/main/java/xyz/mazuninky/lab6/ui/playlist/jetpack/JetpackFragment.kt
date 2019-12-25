@@ -1,4 +1,4 @@
-package xyz.mazuninky.lab6.ui.trends
+package xyz.mazuninky.lab6.ui.playlist.jetpack
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -13,24 +13,22 @@ import kotlinx.android.synthetic.main.fragment_gallery.view.*
 import xyz.mazuninky.lab6.R
 import xyz.mazuninky.lab6.ui.base.VideoRecyclerAdapter
 
-class TrendsFragment : Fragment() {
+class JetpackFragment : Fragment() {
 
-    private lateinit var trendsViewModel: TrendsViewModel
+    private lateinit var trendsViewModel: JetpackViewModel
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        trendsViewModel =
-            ViewModelProviders.of(this).get(TrendsViewModel::class.java)
+        trendsViewModel = ViewModelProviders.of(this).get(JetpackViewModel::class.java)
         val root = inflater.inflate(R.layout.fragment_gallery, container, false)
         root.gallery_recycler.layoutManager =
             StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL)
 
-
         val adapter = VideoRecyclerAdapter({
-            val action = TrendsFragmentDirections.actionNavHomeToNavVideo(it.id)
+            val action = JetpackFragmentDirections.actionNavJetpackToNavVideo(it.id)
             findNavController().navigate(action)
         })
 

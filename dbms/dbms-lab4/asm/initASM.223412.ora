@@ -1,0 +1,5 @@
+instance_type=asm
+ASM_POWER_LIMIT=3
+ASM_DISKSTRING=('/u01/cutechicken/*','/u01/angrycat/*','/u01/carelesscow/*', '/u01/crazydog/*', '/u01/unluckyturtle/*', '/u01/interestinghorse/*')
+large_pool_size=12M
+_ASM_ALLOW_ONLY_RAW_DISKS=FALSE

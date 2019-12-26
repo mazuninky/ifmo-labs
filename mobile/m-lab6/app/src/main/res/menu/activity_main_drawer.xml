@@ -6,21 +6,22 @@
     <group android:checkableBehavior="single">
         <item
             android:id="@+id/nav_home"
-            android:icon="@drawable/ic_menu_camera"
-            android:title="@string/menu_home" />
+            android:icon="@drawable/ic_menu_gallery"
+
+            android:title="Тренды" />
         <item
             android:id="@+id/nav_jetpack"
-            android:icon="@drawable/ic_menu_gallery"
-            android:title="@string/menu_gallery" />
+            android:icon="@drawable/ic_menu_slideshow"
+            android:title="Jetpack" />
         <item
             android:id="@+id/nav_multiplatform"
             android:icon="@drawable/ic_menu_slideshow"
-            android:title="@string/menu_slideshow" />
+            android:title="Multiplatform" />
 
         <item
             android:id="@+id/nav_studio"
-            android:icon="@drawable/ic_menu_manage"
-            android:title="@string/menu_tools" />
+            android:icon="@drawable/ic_menu_slideshow"
+            android:title="Studio" />
 
     </group>
 

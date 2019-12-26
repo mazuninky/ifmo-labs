@@ -9,6 +9,7 @@ import retrofit2.Retrofit
 import kotlinx.coroutines.*
 import xyz.mazuninky.lab6.network.YoutubeApi
 import xyz.mazuninky.lab6.network.mapToEntity
+import xyz.mazuninky.lab6.network.mapToEntityWithResourceId
 
 class StudioViewModel : ViewModel() {
 
@@ -28,7 +29,7 @@ class StudioViewModel : ViewModel() {
 
         coroutineScope.launch {
             val videoData =
-                youtubeAPI.getPlaylist("PLWz5rJ2EKKc_w6fodMGrA1_tsI3pqPbqa").mapToEntity()
+                youtubeAPI.getPlaylist("PLWz5rJ2EKKc_w6fodMGrA1_tsI3pqPbqa").mapToEntityWithResourceId()
 
             _videos.postValue(videoData)
         }

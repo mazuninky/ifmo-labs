@@ -38,7 +38,7 @@
         android:layout_marginTop="32dp"
         android:layout_marginEnd="32dp"
         android:fontFamily="@font/montserrat_medium"
-        android:text="Я занимаюсь Backend разработкой на Spring boot и Kotlin. Около года работал в компании T-Systems."
+        android:text="Я занимаюсь Backend разработкой на Spring boot и Kotlin. Около года работал в компании T-Systems. В данный момент не работаю - закрываю учёбу и пишу диплом."
         android:textColor="#707283"
         android:textSize="16sp"
         app:layout_constraintEnd_toEndOf="parent"

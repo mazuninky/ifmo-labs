@@ -12,13 +12,13 @@ import androidx.navigation.fragment.findNavController
 import kotlinx.android.synthetic.main.fragment_diplom.view.*
 import ru.ifmo.course.R
 
-class DiplomFragment : Fragment() {
+class GoalsFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val root = inflater.inflate(R.layout.fragment_diplom, container, false)
+        val root = inflater.inflate(R.layout.fragment_goals, container, false)
         root.backBtn.setOnClickListener {
             val nav = findNavController()
             nav.popBackStack()

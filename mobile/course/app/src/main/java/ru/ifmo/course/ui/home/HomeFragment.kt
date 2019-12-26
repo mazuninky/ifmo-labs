@@ -1,10 +1,13 @@
 package ru.ifmo.course.ui.home
 
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
@@ -53,11 +56,29 @@ class HomeFragment : Fragment() {
                 PageItem(
                     "https://i.work.ua/article/1051b.jpg",
                     "Планы",
-                    R.id.action_navigation_home_to_navigation_diplom
+                    R.id.action_navigation_home_to_navigation_goals
                 )
             )
         )
         root.mainRecyclerView.adapter = adapter
+        root.sendMail.setOnClickListener {
+            val intent = Intent(Intent.ACTION_VIEW)
+            intent.data = Uri.parse("https://vk.com/mazuninky")
+            
+            startActivity(intent)
+        }
         return root
     }
 }
+
+//fun openWebPage() {
+//    val intent = Intent(Intent.ACTION_VIEW)
+//    intent.data = Uri.parse("http://www.ifmo.ru/ru/")
+//
+//    if (intentIsSafe(intent))
+//        startActivity(intent)
+//    else {
+//        Toast.makeText(this, "Your phone have no app can open web page", Toast.LENGTH_LONG)
+//            .show()
+//    }
+//}

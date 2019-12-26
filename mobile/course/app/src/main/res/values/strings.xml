@@ -3,4 +3,5 @@
     <string name="title_home">Home</string>
     <string name="title_dashboard">Dashboard</string>
     <string name="title_notifications">Notifications</string>
+    <string name="plans">Планы:\n1. Найти новую работу\n2. Написать ВКР\n3. Закончить универ\n4. Поступить в магистратуру\n5. Начать вести open source проект</string>
 </resources>

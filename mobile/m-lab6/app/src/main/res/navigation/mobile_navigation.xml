@@ -8,7 +8,7 @@
     <fragment
         android:id="@+id/nav_home"
         android:name="xyz.mazuninky.lab6.ui.trends.TrendsFragment"
-        android:label="@string/menu_home"
+        android:label="Тренды"
         tools:layout="@layout/fragment_gallery">
         <action
             android:id="@+id/action_nav_home_to_nav_video"
@@ -19,7 +19,7 @@
     <fragment
         android:id="@+id/nav_video"
         android:name="xyz.mazuninky.lab6.ui.video.VideoFragment"
-        android:label="@string/menu_gallery"
+        android:label="Video"
         tools:layout="@layout/fragment_video_player">
 
         <argument
@@ -31,7 +31,7 @@
     <fragment
         android:id="@+id/nav_jetpack"
         android:name="xyz.mazuninky.lab6.ui.playlist.jetpack.JetpackFragment"
-        android:label="@string/menu_home"
+        android:label="JetPack"
         tools:layout="@layout/fragment_playlist" >
         <action
             android:id="@+id/action_nav_jetpack_to_nav_video"
@@ -41,7 +41,7 @@
     <fragment
         android:id="@+id/nav_multiplatform"
         android:name="xyz.mazuninky.lab6.ui.playlist.multiplatform.MultiplatformFragment"
-        android:label="@string/menu_home"
+        android:label="Multiplatform"
         tools:layout="@layout/fragment_playlist" >
         <action
             android:id="@+id/action_nav_multiplatform_to_nav_video"
@@ -51,7 +51,7 @@
     <fragment
         android:id="@+id/nav_studio"
         android:name="xyz.mazuninky.lab6.ui.playlist.studio.StudioFragment"
-        android:label="@string/menu_home"
+        android:label="Studio"
         tools:layout="@layout/fragment_playlist" >
         <action
             android:id="@+id/action_nav_stuido_to_nav_video"

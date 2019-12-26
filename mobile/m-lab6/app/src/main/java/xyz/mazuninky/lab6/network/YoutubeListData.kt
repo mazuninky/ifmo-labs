@@ -77,6 +77,11 @@ class PlayListData {
         var description: String? = null
     }
 
+    class ResourceId {
+        @SerializedName("videoId")
+        var videoId: String? = null
+    }
+
     class Snippet {
         @SerializedName("publishedAt")
         var publishedAt: String? = null
@@ -92,6 +97,8 @@ class PlayListData {
         var channelTitle: String? = null
         @SerializedName("localized")
         var localized: Localized? = null
+        @SerializedName("resourceId")
+        var resourceId: ResourceId? = null
     }
 
     class Items {
@@ -109,5 +116,11 @@ class PlayListData {
 fun PlayListData.mapToEntity(): List<Video> {
     return items?.map {
         Video(it.id!!, it.snippet!!.thumbnails!!.medium!!.url!!)
+    } ?: emptyList()
+}
+
+fun PlayListData.mapToEntityWithResourceId(): List<Video> {
+    return items?.map {
+        Video(it.snippet!!.resourceId!!.videoId!!, it.snippet!!.thumbnails!!.medium!!.url!!)
     } ?: emptyList()
 }

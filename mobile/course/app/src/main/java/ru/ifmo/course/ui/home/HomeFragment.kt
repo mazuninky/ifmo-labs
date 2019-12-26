@@ -8,6 +8,7 @@ import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.android.synthetic.main.activity_main_tes.*
 import kotlinx.android.synthetic.main.activity_main_tes.view.*
@@ -33,13 +34,13 @@ class HomeFragment : Fragment() {
 //        })
         root.mainRecyclerView.layoutManager =
             LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
-        val adapter = PageRecyclerAdapter()
+        val adapter = PageRecyclerAdapter({
+            val nav = findNavController()
+            nav.navigate(it.navigate)
+        })
         adapter.setImages(
             listOf(
-                PageItem("", "Хобби"),
-                PageItem("", "Хобби"),
-                PageItem("", "Хобби"),
-                PageItem("", "Хобби")
+                PageItem("https://img.freepik.com/free-vector/illustration-passion_53876-17884.jpg?size=626&ext=jpg", "Обо мне", R.id.action_navigation_home_to_navigation_about_me)
             )
         )
         root.mainRecyclerView.adapter = adapter

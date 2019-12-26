@@ -25,8 +25,8 @@ class VideoRecyclerHolder(
 
     fun loadVideo(video: PageItem) {
         Glide.with(card.context)
-//            .load(video.img)
-            .load(R.drawable.hobby)
+            .load(video.image)
+//            .load(R.drawable.hobby)
 //            .error(R.drawable.error_map)
 //            .placeholder(R.drawable.load_map)
             .into(card.imageViewPiece)

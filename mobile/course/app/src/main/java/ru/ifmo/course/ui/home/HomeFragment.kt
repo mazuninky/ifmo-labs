@@ -28,10 +28,6 @@ class HomeFragment : Fragment() {
         homeViewModel =
             ViewModelProviders.of(this).get(HomeViewModel::class.java)
         val root = inflater.inflate(R.layout.activity_main_tes, container, false)
-//        val textView: TextView = root.findViewById(R.id.text_home)
-//        homeViewModel.text.observe(this, Observer {
-//            textView.text = it
-//        })
         root.mainRecyclerView.layoutManager =
             LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
         val adapter = PageRecyclerAdapter({
@@ -40,7 +36,25 @@ class HomeFragment : Fragment() {
         })
         adapter.setImages(
             listOf(
-                PageItem("https://img.freepik.com/free-vector/illustration-passion_53876-17884.jpg?size=626&ext=jpg", "Обо мне", R.id.action_navigation_home_to_navigation_about_me)
+                PageItem(
+                    "https://img.freepik.com/free-vector/illustration-passion_53876-17884.jpg?size=626&ext=jpg",
+                    "Обо мне",
+                    R.id.action_navigation_home_to_navigation_about_me
+                ), PageItem(
+                    "https://www.u-b-s.ru/wp-content/uploads/2015/04/obuchenie.jpg",
+                    "Обучение",
+                    R.id.action_navigation_home_to_navigation_learn
+                ),
+                PageItem(
+                    "https://kurgan.ru/media/post/9144/197f89583db9cd092686e07c2c479603.jpg",
+                    "Диплом",
+                    R.id.action_navigation_home_to_navigation_diplom
+                ),
+                PageItem(
+                    "https://i.work.ua/article/1051b.jpg",
+                    "Планы",
+                    R.id.action_navigation_home_to_navigation_diplom
+                )
             )
         )
         root.mainRecyclerView.adapter = adapter

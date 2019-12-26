@@ -44,7 +44,7 @@
             android:shadowColor="#000000"
             android:shadowRadius="10"
 
-            android:text="Расписание"
+            android:text="Хобби"
             android:textColor="#ffffff" />
 
     </FrameLayout>

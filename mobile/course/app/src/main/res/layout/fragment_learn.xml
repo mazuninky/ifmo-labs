@@ -24,24 +24,27 @@
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
         android:fontFamily="sans-serif-black"
-        android:text="Обо мне"
+        android:text="Обучение"
         android:textColor="#0A204C"
         android:textSize="34sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/backBtn"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <TextView
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
+
+    <com.liefery.android.vertical_stepper_view.VerticalStepperView
+        android:id="@+id/verticalStepper"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
         android:layout_marginStart="32dp"
-        android:layout_marginTop="32dp"
+        android:layout_marginTop="16dp"
         android:layout_marginEnd="32dp"
-        android:fontFamily="@font/montserrat_medium"
-        android:text="Я занимаюсь Backend разработкой на Spring boot и Kotlin. Около года работал в компании T-Systems."
-        android:textColor="#707283"
-        android:textSize="16sp"
+        android:layout_marginBottom="16dp"
+        android:clipToPadding="false"
+        android:padding="16dp"
+        android:scrollbarStyle="outsideOverlay"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView3" />
+        app:layout_constraintTop_toBottomOf="@id/textView3" />
 </androidx.constraintlayout.widget.ConstraintLayout>

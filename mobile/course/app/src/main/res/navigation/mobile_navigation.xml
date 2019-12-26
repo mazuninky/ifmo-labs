@@ -17,6 +17,22 @@
             app:exitAnim="@android:anim/fade_out"
             app:popEnterAnim="@android:anim/fade_in"
             app:popExitAnim="@android:anim/fade_out" />
+
+        <action
+            android:id="@+id/action_navigation_home_to_navigation_diplom"
+            app:destination="@id/navigation_diplom"
+            app:enterAnim="@android:anim/fade_in"
+            app:exitAnim="@android:anim/fade_out"
+            app:popEnterAnim="@android:anim/fade_in"
+            app:popExitAnim="@android:anim/fade_out" />
+
+        <action
+            android:id="@+id/action_navigation_home_to_navigation_learn"
+            app:destination="@id/navigation_learn"
+            app:enterAnim="@android:anim/fade_in"
+            app:exitAnim="@android:anim/fade_out"
+            app:popEnterAnim="@android:anim/fade_in"
+            app:popExitAnim="@android:anim/fade_out" />
     </fragment>
 
     <fragment
@@ -24,5 +40,18 @@
         android:name="ru.ifmo.course.ui.about.AboutMeFragment"
         android:label="Обо мне"
         tools:layout="@layout/fragment_about_me" />
+
+    <fragment
+        android:id="@+id/navigation_diplom"
+        android:name="ru.ifmo.course.ui.diplom.DiplomFragment"
+        android:label="Диплом"
+        tools:layout="@layout/fragment_diplom" />
+
+    <fragment
+        android:id="@+id/navigation_learn"
+        android:name="ru.ifmo.course.ui.learn.LearnFragment"
+        android:label="Обучение"
+        tools:layout="@layout/fragment_learn" />
+
 
 </navigation>

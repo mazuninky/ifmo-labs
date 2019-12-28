@@ -8,12 +8,13 @@
 typedef struct {
     int size;
     queue_t message_queue;
-    pthread_t threads[];
+    pthread_t* threads;
+    _Atomic int working_count;
 } pool_descriptor;
 
-void * executor_func(void * param) ;
+int create_pool(pool_descriptor ** desc, int size, void* (executor)(void*));
 
-pool_descriptor * create_pool(int size);
+void pool_cancel(pool_descriptor * pool);
 
 void * pool_add_message(pool_descriptor * pool, TMessage * message);
 

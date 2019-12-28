@@ -14,6 +14,7 @@
 #include <pthread.h>
 #include <errno.h>
 #include <getopt.h>
+#include <lab3/pool.h>
 
 //#define DEBUG
 
@@ -29,6 +30,8 @@ queue_t task_bubble_queue;
 queue_t task_pow_queue;
 
 queue_t write_queue;
+
+pool_descriptor *pool = NULL;
 
 _Atomic int execute_thread_count;
 
@@ -70,6 +73,38 @@ void *stats_writer(void *param) {
         }
     }
 }
+
+/*
+ * Thread pool section
+ */
+
+void *thread_pool_executor(void *param) {
+    pool_descriptor *pool = param;
+
+    clock_t timer = 0, waiting = 0;
+    while (true) {
+        timer = clock();
+        TMessage *message;
+        do {
+            waiting = clock();
+            message = queue_fist(pool->message_queue);
+            if (message != NULL) {
+                stats_report(Execution, Waiting, waiting - timer);
+            }
+        } while (message == NULL);
+
+        pool->working_count++;
+
+        void *result = interpret(message);
+        stats_report(Execution, Working, clock() - waiting);
+
+        if (result != NULL)
+            queue_add(write_queue, result);
+
+        pool->working_count--;
+    }
+}
+
 
 /*
  * Per task section
@@ -194,7 +229,7 @@ void *reader_func(void *param) {
         } else {
             if (type == PER_THREAD) {
                 launch_thread(message);
-            } else {
+            } else if (type == PER_TASK) {
                 switch (message->Type) {
                     case POW:
                         queue_add(task_pow_queue, message);
@@ -206,6 +241,8 @@ void *reader_func(void *param) {
                         queue_add(task_fibonacci_queue, message);
                         break;
                 }
+            } else {
+                pool_add_message(pool, message);
             }
         }
         stats_report(Read, Working, clock() - waiting);
@@ -220,6 +257,7 @@ void *reader_func(void *param) {
 int main(int argc, char *argv[]) {
     StrategyType strategy = PER_THREAD;
 
+    // Parse params section
     int opt, index;
     opt = getopt_long(argc, argv, optString, long_options, &index);
     int n = 1;
@@ -235,13 +273,18 @@ int main(int argc, char *argv[]) {
                     strategy = PER_TASK;
                 } else if (strcmp(optarg, THREAD_POOL_STRATEGY) == 0) {
                     strategy = THREAD_POOL;
-                    return ENOSYS;
                 }
                 break;
         }
 
         opt = getopt_long(argc, argv, optString, long_options, &index);
     }
+
+#ifdef DEBUG
+    strategy = PER_TASK;
+#endif
+
+    // Init section
 
     int fd_stats = open("stats.txt", O_WRONLY | O_CREAT, 0777);
     if (fd_stats == -1) {
@@ -280,6 +323,18 @@ int main(int argc, char *argv[]) {
     pthread_t task_sort;
     pthread_t task_fibonacci;
     if (strategy == PER_TASK) {
+        if(queue_init(&task_fibonacci_queue) != 0) {
+            return EAGAIN;
+        }
+
+        if(queue_init(&task_pow_queue) != 0) {
+            return EAGAIN;
+        }
+
+        if(queue_init(&task_bubble_queue) != 0) {
+            return EAGAIN;
+        }
+
         if (pthread_create(&task_fibonacci, NULL, task_execute_thread, FIBONACCI) != 0) {
             return EAGAIN;
         }
@@ -291,11 +346,21 @@ int main(int argc, char *argv[]) {
         }
     }
 
+    if (strategy == THREAD_POOL) {
+        if (create_pool(&pool, 4, thread_pool_executor) != 0) {
+            return EAGAIN;
+        }
+    }
+
+    // Start reader
+
     int reader_params[] = {fd_reader, strategy};
     pthread_t reader;
     if (pthread_create(&reader, NULL, reader_func, reader_params) != 0) {
         return EAGAIN;
     }
+
+    // End work section
 
     pthread_join(reader, NULL);
 
@@ -309,12 +374,20 @@ int main(int argc, char *argv[]) {
         while (!is_empty(task_fibonacci_queue) && !is_empty(task_pow_queue) && !is_empty(task_bubble_queue));
     }
 
+    if (strategy == THREAD_POOL) {
+        while (!pool_is_empty(pool));
+    }
+
     pthread_cancel(writer);
 
     if (strategy == PER_TASK) {
         pthread_cancel(task_fibonacci);
         pthread_cancel(task_pow);
         pthread_cancel(task_sort);
+    }
+
+    if (strategy == THREAD_POOL) {
+        pool_cancel(pool);
     }
 
     pthread_cancel(stats);

@@ -3,14 +3,8 @@
 
 #include <stdint.h>
 #include <stdio.h>
-#include "output.h"
+#include "lab3/output.h"
 
-typedef enum {
-    FIBONACCI,
-    POW,
-    BUBBLE_SORT_UINT64,
-    STOP
-} EType;
 
 typedef struct {
     uint8_t Type;

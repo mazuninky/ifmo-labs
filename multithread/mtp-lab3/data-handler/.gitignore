@@ -181,3 +181,5 @@ data_input.bin
 output.txt
 stats.txt
 coverage
+
+.ipynb_checkpoints

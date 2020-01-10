@@ -13,15 +13,10 @@
 
 void test_setup();
 
-void start_test(char *message);
+void start_test(const char *message);
 
 void test_ok();
 
 void test_fail(char *message);
-
-void assert_eq_str(char *first, char *second);
-
-void assert_eq_int(int first, int second);
-void assert_eq_long(long first, long second);
 
 #endif //LAB3_TEST_H

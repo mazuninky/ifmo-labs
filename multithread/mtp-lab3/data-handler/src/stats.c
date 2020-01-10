@@ -3,6 +3,10 @@
 #include <stdio.h>
 #include <time.h>
 
+#define STATS_VERSION 1
+
+#if STATS_VERSION == 1
+
 _Atomic double read_working;
 _Atomic double read_waiting;
 _Atomic double read_time;
@@ -57,3 +61,7 @@ char *dump_metrics() {
             read_time, count_read_load(), write_working, write_waiting, write_time, count_write_load());
     return buffer;
 }
+
+#elif STATS_VERSION == 2
+
+#endif

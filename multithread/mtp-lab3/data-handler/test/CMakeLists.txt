@@ -9,6 +9,5 @@ file(GLOB original "${PROJECT_SOURCE_DIR}/src/*.c")
 list(REMOVE_ITEM original "${PROJECT_SOURCE_DIR}/src/main.c")
 
 set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -fprofile-arcs -ftest-coverage")
-#set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -lgcov")
 
 add_executable(test ${sources} ${original})

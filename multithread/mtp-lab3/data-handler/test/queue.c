@@ -7,21 +7,20 @@ TEST(queue, queue)
     ASSERT_EQ(queue_init(&test_queue), 0)
 END_TEST
 
-#define test_count 5
+#define TEST_COUNT 5
 
 TEST(queue, add_get)
     ASSERT_EQ(queue_init(&test_queue), 0)
 
-    for (long i = 0; i < 5; ++i) {
+    for (long i = 0; i < TEST_COUNT; ++i) {
         queue_add(test_queue, (void *) i);
     }
 
-    for (long i = 0; i < 5; ++i) {
+    for (long i = 0; i < TEST_COUNT; ++i) {
         ASSERT_EQ(((long) queue_fist(test_queue)), i)
 
     }
 END_TEST
-
 
 TEST(queue, is_empty)
     ASSERT_EQ(queue_init(&test_queue), 0)

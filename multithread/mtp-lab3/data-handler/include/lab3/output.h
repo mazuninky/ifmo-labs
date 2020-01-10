@@ -1,7 +1,7 @@
 #ifndef LAB3_OUTPUT_H
 #define LAB3_OUTPUT_H
 
-#include "message.h"
+#include <stdint.h>
 
 typedef struct {
     uint8_t Type;

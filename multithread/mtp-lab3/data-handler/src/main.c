@@ -6,15 +6,14 @@
 #include <unistd.h>
 #include <fcntl.h>
 #include "lab3/message.h"
-#include "lab3/algorithm.h"
 #include "lab3/output.h"
 #include "lab3/stats.h"
 #include <stddef.h>
 #include <stdlib.h>
-#include <pthread.h>
 #include <errno.h>
 #include <getopt.h>
 #include <lab3/pool.h>
+#include "lab3/const.h"
 
 //#define DEBUG
 
@@ -53,6 +52,8 @@ typedef enum {
 } StrategyType;
 
 static const char *writerFilePath = "output.txt";
+
+static const char *statsFilePath = "stats.csv";
 
 /*
  * Stats section
@@ -165,6 +166,7 @@ void *execute_thread(void *param) {
         queue_add(write_queue, result);
 
     execute_thread_count--;
+    return NULL;
 }
 
 /*
@@ -286,7 +288,7 @@ int main(int argc, char *argv[]) {
 
     // Init section
 
-    int fd_stats = open("stats.txt", O_WRONLY | O_CREAT, 0777);
+    int fd_stats = open(statsFilePath, O_WRONLY | O_CREAT, 0777);
     if (fd_stats == -1) {
         return EBADF;
     }

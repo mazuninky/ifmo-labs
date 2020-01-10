@@ -6,7 +6,7 @@ void test_setup() {
 
 }
 
-void start_test(char * message) {
+void start_test(const char * message) {
     printf("Test: %s starts\n", message);
 }
 

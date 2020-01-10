@@ -40,6 +40,7 @@ void pool_cancel(pool_descriptor *pool) {
 
 void *pool_add_message(pool_descriptor *pool, TMessage *message) {
     queue_add(pool->message_queue, message);
+    return NULL;
 }
 
 bool pool_is_empty(pool_descriptor *pool) {

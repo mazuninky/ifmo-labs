@@ -3,6 +3,7 @@
 #include <stdio.h>
 #include <unistd.h>
 #include <stdlib.h>
+#include "lab3/const.h"
 
 TMessage *readMessage(int fd) {
     uint8_t type = 0;
@@ -30,18 +31,6 @@ TMessage *readMessage(int fd) {
 
     return message;
 }
-
-
-void printMessage(TMessage *message) {
-    printf("Type: %u", message->Type);
-    printf("Size: %llu", message->Size);
-    switch (message->Type) {
-        case FIBONACCI:
-            printf("Data: %i\n", ((int *) message->Data)[0]);
-            break;
-    }
-}
-
 
 OutputMessage *interpret(TMessage *message) {
     OutputMessage *result = NULL;

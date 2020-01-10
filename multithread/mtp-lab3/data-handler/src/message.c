@@ -49,18 +49,18 @@ OutputMessage *interpret(TMessage *message) {
         int n = ((int *) message->Data)[0];
         long *data = malloc(sizeof(long));
         *data = fibonacci(n);
-        result = create_message(FIBONACCI, data);
+        result = create_message(FIBONACCI, data, sizeof(long));
     } else if (message->Type == BUBBLE_SORT_UINT64) {
         uint64_t *array = (uint64_t *) message->Data;
         long size = message->Size / sizeof(uint64_t);
         bubbleSort(array, size);
-        result = create_message(BUBBLE_SORT_UINT64, array);
+        result = create_message(BUBBLE_SORT_UINT64, array, message->Size);
     } else if (message->Type == POW) {
         int base = ((int *) message->Data)[0];
         uint32_t n = ((uint32_t *) message->Data)[1];
         long *data = malloc(sizeof(long));
         *data = powBase(base, n);
-        result = create_message(POW, data);
+        result = create_message(POW, data, sizeof(long));
     }
 
     return result;

@@ -180,3 +180,4 @@ build
 data_input.bin
 output.txt
 stats.txt
+coverage

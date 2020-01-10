@@ -1,32 +1,14 @@
 include_directories("${PROJECT_SOURCE_DIR}/include")
 
-file(GLOB sources "${PROJECT_SOURCE_DIR}/src/*.c")
-list(REMOVE_ITEM sources "${PROJECT_SOURCE_DIR}/src/main.c")
+file(GLOB sources
+        "${PROJECT_SOURCE_DIR}/include/lab3/*.h"
+        "${PROJECT_SOURCE_DIR}/test/*.c"
+        "${PROJECT_SOURCE_DIR}/test/*.h")
 
-file(GLOB tests "${PROJECT_SOURCE_DIR}/test/*.cpp")
-list(REMOVE_ITEM tests "${PROJECT_SOURCE_DIR}/test/main.cpp")
+file(GLOB original "${PROJECT_SOURCE_DIR}/src/*.c")
+list(REMOVE_ITEM original "${PROJECT_SOURCE_DIR}/src/main.c")
 
-foreach(file ${tests})
-    set(name)
-    get_filename_component(name ${file} NAME_WE)
-    add_executable("${name}_tests"
-            ${sources}
-            ${file}
-            "${PROJECT_SOURCE_DIR}/test/main.cpp")
-    target_link_libraries("${name}_tests" gtest_main)
-    add_test(NAME ${name} COMMAND "${name}_tests")
-endforeach()
+set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -fprofile-arcs -ftest-coverage")
+#set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -lgcov")
 
-#add_custom_target(gcov
-#        COMMAND mkdir -p coverage
-#        COMMAND ${CMAKE_MAKE_PROGRAM} test
-#        WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
-#        )
-#add_custom_command(TARGET gcov
-#        COMMAND echo "=================== GCOV ===================="
-#        COMMAND gcov -b ${CMAKE_SOURCE_DIR}/*.cpp -o ${OBJECT_DIR}
-#        | grep -A 5 "main.c" > CoverageSummary.tmp
-#        COMMAND cat CoverageSummary.tmp
-#        COMMAND echo "-- Coverage files have been output to ${CMAKE_BINARY_DIR}/coverage"
-#        WORKING_DIRECTORY ${CMAKE_BINARY_DIR}/coverage
-#        )
+add_executable(test ${sources} ${original})

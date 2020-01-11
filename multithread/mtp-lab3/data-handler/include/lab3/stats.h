@@ -19,6 +19,8 @@ typedef enum {
 
 //StatsMessage * create_stats_message(StageType stage, StateType state, uint32_t time);
 
+// метрики: время чтения, время ожидания чтения, время записи,
+
 void stats_init();
 
 void stats_report(StageType stage, StateType state, double clock_time);

@@ -1,7 +1,7 @@
 #include <stdint.h>
 
 long fibonacci(int n) {
-    if(n < 0)
+    if (n < 0)
         return -1;
 
     int a = 0, b = 1, c, i;
@@ -30,8 +30,13 @@ void bubbleSort(uint64_t *array, long size) {
 }
 
 long powBase(int base, uint32_t step) {
+    if (step == 0)
+        return 1;
+
     long number = 1;
-    for (uint32_t i = 0; i < step; i++)
+    for (uint32_t i = 0; i < step; i++) {
         number *= base;
+    }
+
     return number;
 }

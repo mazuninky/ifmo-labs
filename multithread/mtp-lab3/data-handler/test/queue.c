@@ -18,7 +18,6 @@ TEST(queue, add_get)
 
     for (long i = 0; i < TEST_COUNT; ++i) {
         ASSERT_EQ(((long) queue_fist(test_queue)), i)
-
     }
 END_TEST
 

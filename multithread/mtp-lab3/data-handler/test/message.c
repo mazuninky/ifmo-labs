@@ -16,18 +16,19 @@ TEST(message, interpret_fib)
     ASSERT_EQ(*((long*)output->Data), 144)
 END_TEST
 
-//TEST(message, interpret_fib)
-//    int numbers[] = {3, 3};
-//    TMessage message;
-//    message.Type = FIBONACCI;
-//    message.Size = sizeof(numbers);
-//    message.Data = numbers;
-//    OutputMessage * output = interpret(&message);
-//    ASSERT_EQ(output->Type, FIBONACCI)
-//    ASSERT_EQ(output->Size, sizeof(long))
-//    ASSERT_EQ(*((long*)output->Data), 144)
-//END_TEST
+TEST(message, interpret_pow)
+    uint32_t numbers[] = {5, 0};
+    TMessage message;
+    message.Type = POW;
+    message.Size = sizeof(numbers);
+    message.Data = numbers;
+    OutputMessage * output = interpret(&message);
+    ASSERT_EQ(output->Type, POW)
+    ASSERT_EQ(output->Size, sizeof(long))
+    ASSERT_EQ(*((long*)output->Data), 1)
+END_TEST
 
 void message_runner() {
     message_interpret_fib();
+    message_interpret_pow();
 }

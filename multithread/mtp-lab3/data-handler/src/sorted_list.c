@@ -1,5 +1,4 @@
 #include <stddef.h>
-#include "lab3/queue.h"
 #include <stdlib.h>
 #include <pthread.h>
 #include <lab3/sorted_list.h>
@@ -33,15 +32,14 @@ sorted_list_node *create_slist_node(double value) {
 void slist_add(sorted_list_descriptor *list, double value) {
     pthread_mutex_lock(&list->lock);
     sorted_list_node *node = create_slist_node(value);
-    if (list->last == NULL) {
+    if (list->root == NULL) {
         list->root = node;
         list->last = node;
     } else {
         if (list->last->value < value) {
             list->last->next = node;
             list->last = node;
-        }
-        if (list->root->value > value) {
+        } else if (list->root->value > value) {
             node->next = list->root;
             list->root = node;
         } else {
@@ -59,21 +57,21 @@ void slist_add(sorted_list_descriptor *list, double value) {
     pthread_mutex_unlock(&list->lock);
 }
 
-bool list_is_empty(sorted_list_descriptor *list) {
-    pthread_mutex_lock(&list->lock);
-    bool empty = list->root == NULL;
-    pthread_mutex_unlock(&list->lock);
-    return empty;
-}
-
 double slits_kn(sorted_list_descriptor *list, double k) {
+    pthread_mutex_lock(&list->lock);
+    if (list->root == NULL) {
+        pthread_mutex_unlock(&list->lock);
+        return 0.0;
+    }
+
     int index = (int) (list->size * k);
 
     sorted_list_node *curr = list->root;
-    double value = 0.0;
     for (int i = 0; i < index; i++) {
         curr = curr->next;
     }
+    double value = curr->value;
 
-    return curr->value;
+    pthread_mutex_unlock(&list->lock);
+    return value;
 }

@@ -8,12 +8,12 @@ kotlin {
     macosX64("native") {
         binaries {
             executable {
-                freeCompilerArgs += listOf("-Xuse-experimental=kotlin.Experimental")
+//                freeCompilerArgs += listOf("-Xuse-experimental=kotlin.Experimental")
                 //                compilerOpts = mutableListOf("-Xuse-experimental=kotlin.Experimental")
                 entryPoint = "xyz.mazuninky.lab3.main"
             }
             binaries.getTest("DEBUG").apply {
-                freeCompilerArgs += listOf("-Xlibrary-to-cover=${compilations["main"].output.classesDirs.singleFile.absolutePath}", "-Xuse-experimental=kotlin.Experimental")
+                freeCompilerArgs += listOf("-Xlibrary-to-cover=${compilations["main"].output.classesDirs.singleFile.absolutePath}")
             }
         }
     }

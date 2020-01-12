@@ -24,10 +24,10 @@ typedef struct {
 
 int slist_init(sorted_list_descriptor **list_desc);
 
-void slist_add(sorted_list_descriptor * list, double value);
+void slist_add(sorted_list_descriptor *list, double value);
 
-bool list_is_empty(sorted_list_descriptor * list);
+bool list_is_empty(sorted_list_descriptor *list);
 
-double slits_array(sorted_list_descriptor * list);
+double slits_kn(sorted_list_descriptor *list, double k);
 
 #endif //LAB3_LIST_H

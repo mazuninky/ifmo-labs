@@ -1,5 +1,6 @@
 package xyz.mazuninky.lab3.test
 
+import xyz.mazuninky.lab3.logisticGenerator
 import xyz.mazuninky.lab3.uniform
 import xyz.mazuninky.lab3.uniformGenerator
 import xyz.mazuninky.lab3.сauchyGenerator
@@ -32,6 +33,13 @@ class DistributionTest {
     @Test
     fun testCauchy() {
         val uniform = сauchyGenerator(2f, 1.5f)
+        val numbers = makeExperiment(1000, uniform)
+        println(abs(numbers.med() - 2f) <= 0.1f)
+    }
+
+    @Test
+    fun testLogistic() {
+        val uniform = logisticGenerator(2f, 1.5f)
         val numbers = makeExperiment(1000, uniform)
         println(abs(numbers.med() - 2f) <= 0.1f)
     }

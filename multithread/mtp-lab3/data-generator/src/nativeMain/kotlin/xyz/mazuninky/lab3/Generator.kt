@@ -13,7 +13,6 @@ fun DistributionGenerator.nextULong(): ULong {
     return this().roundToLong().absoluteValue.toULong()
 }
 
-
 fun generate(distrFunc: DistributionGenerator): TMessage {
     val type = Random.nextInt(0, 3)
 

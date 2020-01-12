@@ -11,14 +11,6 @@ typedef enum {
     Waiting, Working
 } StateType;
 
-//typedef struct {
-//    StageType Stage;
-//    StateType State;
-//    uint32_t Time;
-//} StatsMessage;
-
-//StatsMessage * create_stats_message(StageType stage, StateType state, uint32_t time);
-
 // метрики: время чтения, время ожидания чтения, время записи,
 
 void stats_init();

@@ -11,12 +11,6 @@
 
 #define ASSERT_EQ(first, second) if(first != second) { TEST_FAIL }
 
-void test_setup();
-
 void start_test(const char *message);
-
-void test_ok();
-
-void test_fail(char *message);
 
 #endif //LAB3_TEST_H

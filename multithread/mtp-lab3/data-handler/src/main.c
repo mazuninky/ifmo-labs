@@ -61,12 +61,12 @@ static const char *statsFilePath = "stats.csv";
 
 void *stats_writer(void *param) {
     int *args = (int *) param;
-    double n = args[0] * 0.001;
+    double n = args[0];
     int fd = args[1];
 
     clock_t timer = clock();
     while (true) {
-        if ((double) (timer - clock()) / CLOCKS_PER_SEC > n) {
+        if (((double) (clock() - timer)) / CLOCKS_PER_SEC * 0.001 > n) {
             char *metrics_string = dump_metrics();
             write(fd, metrics_string, strlen(metrics_string));
             free(metrics_string);
@@ -90,14 +90,14 @@ void *thread_pool_executor(void *param) {
             waiting = clock();
             message = queue_fist(pool->message_queue);
             if (message != NULL) {
-                stats_report(Execution, Waiting, waiting - timer);
+                stats_report(Execution, Waiting, (double) waiting - timer);
             }
         } while (message == NULL);
 
         pool->working_count++;
 
         void *result = interpret(message);
-        stats_report(Execution, Working, clock() - waiting);
+        stats_report(Execution, Working, (double) clock() - waiting);
 
         if (result != NULL)
             queue_add(write_queue, result);
@@ -135,12 +135,12 @@ void *task_execute_thread(void *param) {
             waiting = clock();
             message = read_message_with_type(type);
             if (message != NULL) {
-                stats_report(Execution, Waiting, waiting - timer);
+                stats_report(Execution, Waiting, (double) waiting - timer);
             }
         } while (message == NULL);
 
         void *result = interpret(message);
-        stats_report(Execution, Working, clock() - waiting);
+        stats_report(Execution, Working, (double) clock() - waiting);
 
         if (result != NULL)
             queue_add(write_queue, result);
@@ -157,7 +157,7 @@ void *execute_thread(void *param) {
 
     clock_t timer = clock();
     void *result = interpret(message);
-    stats_report(Execution, Working, clock() - timer);
+    stats_report(Execution, Working, (double) clock() - timer);
 
 //    free(message->Data);
 //    free(message);
@@ -183,7 +183,7 @@ void *writer_func(void *param) {
             waiting = clock();
             message = queue_fist(write_queue);
             if (message != NULL) {
-                stats_report(Write, Waiting, waiting - timer);
+                stats_report(Write, Waiting, (double) waiting - timer);
             }
         } while (message == NULL);
 
@@ -194,7 +194,7 @@ void *writer_func(void *param) {
         write(fd, string, strlen(string));
         free(string);
 
-        stats_report(Write, Working, clock() - waiting);
+        stats_report(Write, Working, (double) clock() - waiting);
     }
 }
 
@@ -222,7 +222,7 @@ void *reader_func(void *param) {
             waiting = clock();
             message = readMessage(fd);
             if (message != NULL) {
-                stats_report(Read, Waiting, waiting - timer);
+                stats_report(Read, Waiting, (double) waiting - timer);
             }
         } while (message == NULL);
 
@@ -247,7 +247,7 @@ void *reader_func(void *param) {
                 pool_add_message(pool, message);
             }
         }
-        stats_report(Read, Working, clock() - waiting);
+        stats_report(Read, Working, (double) clock() - waiting);
     }
 }
 
@@ -262,7 +262,7 @@ int main(int argc, char *argv[]) {
     // Parse params section
     int opt, index;
     opt = getopt_long(argc, argv, optString, long_options, &index);
-    int n = 1;
+    int n = 10;
     while (opt != -1) {
         switch (opt) {
             case 'n':
@@ -325,15 +325,15 @@ int main(int argc, char *argv[]) {
     pthread_t task_sort;
     pthread_t task_fibonacci;
     if (strategy == PER_TASK) {
-        if(queue_init(&task_fibonacci_queue) != 0) {
+        if (queue_init(&task_fibonacci_queue) != 0) {
             return EAGAIN;
         }
 
-        if(queue_init(&task_pow_queue) != 0) {
+        if (queue_init(&task_pow_queue) != 0) {
             return EAGAIN;
         }
 
-        if(queue_init(&task_bubble_queue) != 0) {
+        if (queue_init(&task_bubble_queue) != 0) {
             return EAGAIN;
         }
 
@@ -349,7 +349,7 @@ int main(int argc, char *argv[]) {
     }
 
     if (strategy == THREAD_POOL) {
-        if (create_pool(&pool, 4, thread_pool_executor) != 0) {
+        if (create_pool(&pool, 5, thread_pool_executor) != 0) {
             return EAGAIN;
         }
     }
@@ -366,8 +366,6 @@ int main(int argc, char *argv[]) {
 
     pthread_join(reader, NULL);
 
-    while (!is_empty(write_queue));
-
     if (strategy == PER_THREAD) {
         while (execute_thread_count != 0);
     }
@@ -380,6 +378,7 @@ int main(int argc, char *argv[]) {
         while (!pool_is_empty(pool));
     }
 
+    while (!is_empty(write_queue));
     pthread_cancel(writer);
 
     if (strategy == PER_TASK) {
